@@ -1,0 +1,8 @@
+#object file
+Matrix/matrix.o
+
+#elf file
+Matrix/matrix
+
+#generated library file
+Matrix/libmatrixcpp.*
