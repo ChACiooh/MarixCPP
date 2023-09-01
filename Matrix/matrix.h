@@ -47,12 +47,20 @@ public:
     Matrix<T> operator*(const Matrix<T>& _factor_);
 
     /**
-     * @brief Get column. TODO - modify this function to use pointers
+     * @brief Get row. TODO - modify this function to use pointers
      * 
      * @param idx 
      * @return std::vector<T> 
      */
     std::vector<T> operator[](unsigned int idx) const;
+
+    /**
+     * @brief Get comlumn
+     * 
+     * @param idx 
+     * @return std::vector<T> 
+     */
+    std::vector<T> col(unsigned int idx) const;
 
     template<typename U>
     friend Matrix<U> operator+(const std::vector<std::vector<U>>& _first_, const Matrix<U>& _second_);

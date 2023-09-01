@@ -23,5 +23,11 @@ int main() {
     Matrix<int> d = a * c;
     printf("D:\n");
     d.PrintMatrix();
+
+    vector<int> col = c.col(1);
+    for (auto e : col) {
+        printf("%d ", e);
+    }
+    printf("\n");
     return 0;
 }

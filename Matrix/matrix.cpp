@@ -53,12 +53,18 @@ Matrix<T>::Matrix(const std::vector<std::vector<T>>& __vbase__) {
 
 template<typename T>
 std::vector<T> Matrix<T>::operator[](unsigned int idx) const {
+    assert(idx < num_of_rows_);
+    return std::vector<T>(this->rows_[idx], this->rows_[idx] + num_of_cols_);
+}
+
+template<typename T>
+std::vector<T> Matrix<T>::col(unsigned int idx) const {
     assert(idx < num_of_cols_);
-    std::vector<T> cols;
-    for (size_t i = 0; i < num_of_rows_; ++i) {
-        cols.push_back(rows_[i][idx]);
+    std::vector<T> column;
+    for (int i = 0; i < num_of_rows_; ++i) {
+        column.push_back(rows_[i][idx]);
     }
-    return cols;
+    return column;
 }
 
 template <typename T>
@@ -84,7 +90,7 @@ Matrix<T> Matrix<T>::operator*(const Matrix<T>& _factor_) {
     for (size_t i = 0; i < this->num_of_rows_; ++i) {
         std::vector<T> new_row;
         for (size_t j = 0; j < c; ++j) {
-            T value = std::vector<T>(this->rows_[i], this->rows_[i] + r) * _factor_[j];
+            T value = (*this)[i] * _factor_.col(j);
             new_row.push_back(value);
         }
         res.push_back(new_row);
