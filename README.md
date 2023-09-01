@@ -1,6 +1,13 @@
 # MatrixCPP
 Matrix operation for C++
 
+# Installation
+```bash
+cd Matrix
+sudo bash install.sh
+make
+```
+
 # Usage
 See main.cpp
 - scalar scaling
