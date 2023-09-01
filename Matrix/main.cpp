@@ -21,13 +21,18 @@ int main() {
     c.PrintMatrix();
 
     Matrix<int> d = a * c;
-    printf("D:\n");
+    printf("D = A * C:\n");
     d.PrintMatrix();
 
-    vector<int> col = c.col(1);
-    for (auto e : col) {
-        printf("%d ", e);
-    }
-    printf("\n");
+    printf("scaling:\n");
+    Matrix<double> e = 2.2 * Matrix<double>(a);
+    e.PrintMatrix();
+
+    printf("Transpose:\n");
+    Matrix<double> f = e.Transpose();
+    f.PrintMatrix();
+
+    printf("(2, 1) elem:\n");
+    printf("%lf\n", f[1][0]);
     return 0;
 }

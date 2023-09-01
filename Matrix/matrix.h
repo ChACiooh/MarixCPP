@@ -12,7 +12,7 @@ template<typename T>
 struct Matrix {
 public:
     Matrix() {
-        rows_ = cols_ = NULL;
+        rows_ = NULL;
         num_of_rows_ = num_of_cols_ = length_ = 0;
     }
 
@@ -20,13 +20,33 @@ public:
 
     Matrix(const std::vector<std::vector<T>>& __vbase__);
 
-    ~Matrix() {
+    template<typename U>
+    friend struct Matrix;
+
+    template<typename U>
+    Matrix(const Matrix<U>& __ubase__) :
+            num_of_rows_(__ubase__.num_of_rows_),
+            num_of_cols_(__ubase__.num_of_cols_),
+            length_(__ubase__.length_) {
+        rows_ = new T*[num_of_rows_];
         for (size_t i = 0; i < num_of_rows_; ++i) {
-            if (rows_[i])   delete[] rows_[i];
-            rows_[i] = NULL;
+            rows_[i] = new T[num_of_cols_];
+            for (size_t j = 0; j < num_of_cols_; ++j) {
+                rows_[i][j] = static_cast<T>(__ubase__.rows_[i][j]);
+            }
         }
-        delete[] rows_;
-        cols_ = rows_ = NULL;
+    }
+
+    ~Matrix() {
+        if (rows_) {
+            for (size_t i = 0; i < num_of_rows_; ++i) {
+                if (rows_[i])   delete[] rows_[i];
+                rows_[i] = NULL;
+            }
+            delete[] rows_;
+        }
+        rows_ = NULL;
+        num_of_cols_ = num_of_rows_ = length_ = 0;
     }
 
     void PrintMatrix() {
@@ -42,9 +62,43 @@ public:
         return std::make_pair(num_of_rows_, num_of_cols_);
     }
 
+    /**
+     * @brief Transpose
+     * 
+     * @return Matrix<T> transposed new matrix
+     */
+    Matrix<T> Transpose() const;
+
+    Matrix<T> operator-() const;
+
+    Matrix<T> operator+() const { return *this; }
+
     Matrix<T> operator+(const Matrix<T>& _factor_);
 
+    Matrix<T> operator-(const Matrix<T>& _factor_);
+
     Matrix<T> operator*(const Matrix<T>& _factor_);
+
+    Matrix<T> operator*(const T& _scale_);
+
+    Matrix<T>& operator=(const Matrix<T>& _mat_) {
+        if (rows_) {
+            for (size_t i = 0; i < num_of_rows_; ++i) {
+                if (rows_[i])   delete[] rows_[i];
+            }
+        }
+        num_of_rows_ = _mat_.num_of_rows_;
+        num_of_cols_ = _mat_.num_of_cols_;
+        rows_ = new T*[num_of_rows_];
+        for (size_t i = 0; i < num_of_rows_; ++i) {
+            rows_[i] = new T[num_of_cols_];
+            for (size_t j = 0; j < num_of_cols_; ++j) {
+                rows_[i][j] = _mat_.rows_[i][j];
+            }
+        }
+
+        return *this;
+    }
 
     /**
      * @brief Get row. TODO - modify this function to use pointers
@@ -55,7 +109,7 @@ public:
     std::vector<T> operator[](unsigned int idx) const;
 
     /**
-     * @brief Get comlumn
+     * @brief Get col
      * 
      * @param idx 
      * @return std::vector<T> 
@@ -68,9 +122,12 @@ public:
     template<typename U>
     friend Matrix<U> operator*(const U& _scale_, const Matrix<U>& _mat_);
 
+    // template<typename U>
+    // friend Matrix<U> operator*(const U& _scale_, const Matrix<T>& _mat_);
+    // friend typename std::enable_if<!std::is_same<U, T>::value, Matrix<U>>::type operator*(const U& _scale_, const Matrix<T>& _mat_);
+
 private:
     T** rows_;
-    T** cols_;  // TODO - initialize with rows together
     size_t num_of_rows_, num_of_cols_;
     size_t length_;
 };

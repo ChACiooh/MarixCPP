@@ -51,20 +51,47 @@ Matrix<T>::Matrix(const std::vector<std::vector<T>>& __vbase__) {
     }
 }
 
+
+template<typename T>
+Matrix<T> Matrix<T>::Transpose() const {
+    std::vector<std::vector<T>> cols;
+    for (size_t i = 0; i < num_of_cols_; ++i) {
+        std::vector<T> col = (*this)[i];
+        cols.push_back(col);
+    }
+    return Matrix<T>(cols);
+}
+
+template<typename T>
+Matrix<T> Matrix<T>::operator-() const {
+    Matrix<T> res(*this);
+    for (size_t i = 0; i < num_of_rows_; ++i) {
+        for (size_t j = 0; j < num_of_cols_; ++j) {
+            res.rows_[i][j] *= -1;
+        }
+    }
+    return res;
+}
+
+template<typename T>
+Matrix<T> Matrix<T>::operator-(const Matrix<T>& _factor_) {
+    return *this + (-_factor_);
+}
+
 template<typename T>
 std::vector<T> Matrix<T>::operator[](unsigned int idx) const {
     assert(idx < num_of_rows_);
-    return std::vector<T>(this->rows_[idx], this->rows_[idx] + num_of_cols_);
+    return std::vector<T>(rows_[idx], rows_[idx] + num_of_cols_);
 }
 
 template<typename T>
 std::vector<T> Matrix<T>::col(unsigned int idx) const {
     assert(idx < num_of_cols_);
-    std::vector<T> column;
-    for (int i = 0; i < num_of_rows_; ++i) {
-        column.push_back(rows_[i][idx]);
+    std::vector<T> colmun;
+    for (size_t i = 0; i < num_of_rows_; ++i) {
+        colmun.push_back(rows_[i][idx]);
     }
-    return column;
+    return colmun;
 }
 
 template <typename T>
@@ -98,6 +125,16 @@ Matrix<T> Matrix<T>::operator*(const Matrix<T>& _factor_) {
     return Matrix<T>(res);
 }
 
+template <typename T>
+Matrix<T> Matrix<T>::operator*(const T& _scale_) {
+    for (size_t i = 0; i < num_of_rows_; ++i) {
+        for (size_t j = 0; j < num_of_cols_; ++j) {
+            rows_[i][j] *= _scale_;
+        }
+    }
+    return Matrix<T>(*this);
+}
+
 template<typename T>
 Matrix<T> operator+(const vector<vector<T>>& _first_, const Matrix<T>& _second_) {
     const size_t &r = _second_.num_of_rows_, &c = _second_.num_of_cols_;
@@ -115,13 +152,11 @@ Matrix<T> operator+(const vector<vector<T>>& _first_, const Matrix<T>& _second_)
     return Matrix<T>(res);
 }
 
-
-// TODO : 지금은 전부 double로 통일, 나중에 일반화
 template<typename T>
 Matrix<T> operator*(const T& _scale_, const Matrix<T>& _mat_) {
     Matrix<T> result(_mat_);
-    for (size_t i = 0; i < _mat_.num_of_rows_; ++i) {
-        for (size_t j = 0; j < _mat_.num_of_cols_; ++j) {
+    for (size_t i = 0; i < result.num_of_rows_; ++i) {
+        for (size_t j = 0; j < result.num_of_cols_; ++j) {
             result.rows_[i][j] *= _scale_;
         }
     }
@@ -129,6 +164,6 @@ Matrix<T> operator*(const T& _scale_, const Matrix<T>& _mat_) {
 }
 
 template Matrix<int> operator*<int>(const int& _scale_, const Matrix<int>& _mat_);
-template Matrix<int64_t> operator*<int64_t>(const int64_t& _scale_, const Matrix<int64_t>& _mat_);
 template Matrix<double> operator*<double>(const double& _scale_, const Matrix<double>& _mat_);
-template Matrix<float> operator*<float>(const float& _scale_, const Matrix<float>& _mat_);
+// template Matrix<double> operator*<double>(const double& _scale_, const Matrix<int>& _mat_);
+// template Matrix<double> operator*<double>(const int& _scale_, const Matrix<double>& _mat_);

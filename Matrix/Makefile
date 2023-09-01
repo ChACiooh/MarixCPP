@@ -1,5 +1,5 @@
-matrix: main.cpp matrix.cpp
-	g++ -o matrix main.cpp matrix.cpp
+matrix: main.cpp 
+	g++ -o matrix main.cpp -lmatrixcpp
 
 clean:
 	rm matrix
