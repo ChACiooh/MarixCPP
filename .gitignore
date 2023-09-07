@@ -1,2 +1,4 @@
 # executable files
 Matrix/matrix
+Matrix/libmatrixcpp.so.*
+Matrix/matrix.o

@@ -55,7 +55,7 @@ Matrix<T>::Matrix(const std::vector<std::vector<T>>& __vbase__) {
 template<typename T>
 Matrix<T> Matrix<T>::Transpose() const {
     std::vector<std::vector<T>> cols;
-    for (size_t i = 0; i < num_of_cols_; ++i) {
+    for (size_t i = 0; i < num_of_rows_; ++i) {
         std::vector<T> col = (*this)[i];
         cols.push_back(col);
     }
@@ -111,7 +111,7 @@ template <typename T>
 Matrix<T> Matrix<T>::operator*(const Matrix<T>& _factor_) {
     const size_t &r = _factor_.num_of_rows_;
     const size_t &c = _factor_.num_of_cols_;
-    assert(this->num_of_rows_ == c && this->num_of_cols_ == r);
+    assert(this->num_of_cols_ == r);
 
     std::vector<std::vector<T>> res;
     for (size_t i = 0; i < this->num_of_rows_; ++i) {
@@ -122,6 +122,7 @@ Matrix<T> Matrix<T>::operator*(const Matrix<T>& _factor_) {
         }
         res.push_back(new_row);
     }
+    
     return Matrix<T>(res);
 }
 
